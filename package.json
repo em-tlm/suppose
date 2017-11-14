@@ -1,0 +1,20 @@
+{
+  "name": "suppose",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^4.1.2",
+    "joi": "^10.0.0",
+    "lodash": "^4.17.4",
+    "sinon": "^4.1.2"
+  },
+  "devDependencies": {
+    "mocha": "^4.0.1"
+  }
+}
