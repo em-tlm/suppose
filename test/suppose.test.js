@@ -69,38 +69,36 @@ describe('defineFixture', function() {
   });
 });
 
-describe('suppose', function() {
-  describe('when the fixture doesnt exist', function() {
-    it('throws an error', function() {
-      expect(function() {
-        suppose('doesnt_exist');
-      }).to.throw('Fixture not found');
+describe('when the fixture doesnt exist', function() {
+  it('throws an error', function() {
+    expect(function() {
+      suppose('doesnt_exist');
+    }).to.throw('Fixture not found');
+  });
+});
+
+describe('when the fixture generated doesnt validate correctly', function() {
+  beforeEach(function() {
+    suppose.defineFixture('twoItemsInCart', (config) => {
+      return {
+        items: [],
+        itemsCount: 0,
+        fooId: config.fooId,
+      };
+    }, {
+      typeName: 'CheckoutCart',
+      schema: Joi.object().keys({
+        missingBaz: Joi.string().required(),
+      }),
+      persist: () => {},
+      remove: () => {},
     });
   });
 
-  describe('when the fixture generated doesnt validate correctly', function() {
-    beforeEach(function() {
-      suppose.defineFixture('twoItemsInCart', (config) => {
-        return {
-          items: [],
-          itemsCount: 0,
-          fooId: config.fooId,
-        };
-      }, {
-        typeName: 'CheckoutCart',
-        schema: Joi.object().keys({
-          missingBaz: Joi.string().required(),
-        }),
-        persist: () => {},
-        remove: () => {},
-      });
-    });
-
-    it('throws an error', function() {
-      expect(function() {
-        suppose('twoItemsInCart').render({fooId: 'foo'});
-      }).to.throw('missingBaz');
-    });
+  it('throws an error', function() {
+    expect(function() {
+      suppose('twoItemsInCart').render({fooId: 'foo'});
+    }).to.throw('missingBaz');
   });
 });
 

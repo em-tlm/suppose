@@ -1,1 +1,1 @@
-export default require('./src/suppose');
+module.exports = require('./src/suppose');

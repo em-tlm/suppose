@@ -50,18 +50,16 @@ function suppose(fixtureName) {
   function SupposeChainable() {
     this.render = (config) => {
       let model = fixtureDef.generateFn(config);
+      if (model instanceof SupposeChainable) {
+        model = model.render();
+      }
 
       const args = [{}, model].concat(objMerges);
       model = _.merge.apply(_, args)
 
       if (fixtureDef.schema) {
-        const result = Joi.validate(model, fixtureDef.schema, {
-          stripUnknown: true,
-        });
-
-        if (result.error) {
-          throw result.error;
-        }
+        const result = Joi.attempt(model, fixtureDef.schema);
+        model = result;
       }
 
       return model;
@@ -83,8 +81,16 @@ function suppose(fixtureName) {
       return fixtureDef.remove(asPersisted);
     };
 
-    this.butWith = () => {
+    this.butMerge = (_obj) => {
+      let obj;
+
+      if (_obj instanceof SupposeChainable) {
+        obj = _obj.render();
+      }
+
       objMerges.push(obj)
+
+      return this;
     };
 
     // returns the data as returned by the `persist` function passed in configuration.
