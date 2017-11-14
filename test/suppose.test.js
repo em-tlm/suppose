@@ -29,7 +29,7 @@ describe('defineFixture', function() {
       return {
         items: [],
         itemsCount: 0,
-        fooId: config.fooId,
+        fooId: config.hasFoo ? 'fakeId' : null,
       };
     }, {
       typeName: 'CheckoutCart',
@@ -39,17 +39,17 @@ describe('defineFixture', function() {
   });
 
   it('fixture can be rendered', function() {
-    const model = suppose('emptyCart').render({fooId: 'foo'});
+    const model = suppose('emptyCart').render({hasFoo: true});
 
     expect(model).to.eql({
       items: [],
       itemsCount: 0,
-      fooId: 'foo',
+      fooId: 'fakeId',
     });
   });
 
   it('fixture can be persisted', function() {
-    const promise  = suppose('emptyCart').persist({fooId: 'foo'});
+    const promise  = suppose('emptyCart').persist({hasFoo: true});
     expect(promise).to.be.instanceOf(Promise);
 
     return promise.then((result) => {
@@ -60,7 +60,7 @@ describe('defineFixture', function() {
   it('fixture can be removed', function() {
     const fixture  = suppose('emptyCart');
 
-    return fixture.persist({fooId: 'foo'}).then((result)=> {
+    return fixture.persist({hasFoo: true}).then((result)=> {
       expect(fixture.getAsPersisted()).to.equal('fakePersistResult');
       return fixture.remove();
     }).then((result) => {
@@ -83,7 +83,7 @@ describe('when the fixture generated doesnt validate correctly', function() {
       return {
         items: [],
         itemsCount: 0,
-        fooId: config.fooId,
+        fooId: config.hasFoo ? 'fakeId' : null,
       };
     }, {
       typeName: 'CheckoutCart',
@@ -97,8 +97,31 @@ describe('when the fixture generated doesnt validate correctly', function() {
 
   it('throws an error', function() {
     expect(function() {
-      suppose('twoItemsInCart').render({fooId: 'foo'});
+      suppose('twoItemsInCart').render({hasFoo: true});
     }).to.throw('missingBaz');
+  });
+});
+
+describe('when fixture rendered has merges', function() {
+  beforeEach(function() {
+    suppose.defineFixture('twoItemsInCart', (config) => {
+      return {
+        items: [],
+        itemsCount: 0,
+        fooId: config.hasFoo ? 'fakeId' : null,
+      };
+    });
+  });
+
+  it('it merges', function() {
+    expect(
+      suppose('twoItemsInCart').butMerge({ vip: 'trep'}).render({hasFoo: false})
+    ).to.eql({
+      items: [],
+      itemsCount: 0,
+      fooId: null,
+      vip: 'trep'
+    });
   });
 });
 

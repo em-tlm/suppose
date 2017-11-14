@@ -82,10 +82,10 @@ function suppose(fixtureName) {
     };
 
     this.butMerge = (_obj) => {
-      let obj;
+      let obj = _obj;
 
-      if (_obj instanceof SupposeChainable) {
-        obj = _obj.render();
+      if (obj instanceof SupposeChainable) {
+        obj = obj.render();
       }
 
       objMerges.push(obj)
