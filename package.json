@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "joi": "^10.0.0",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.4"
   },
   "devDependencies": {
     "mocha": "^4.0.1",
