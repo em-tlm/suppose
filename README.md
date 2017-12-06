@@ -5,7 +5,7 @@ A minimalistic data fixtures library that plays well with unit tests and redux r
 
 
 
-```
+```javascript
 /* myFixtures.js */
 
 const fixtureConfig = {
