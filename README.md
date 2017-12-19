@@ -27,17 +27,21 @@ suppose.defineFixture('authed_user', (config) => {
 /* myFoo.test.js */
 
 // Just render the fixture into a POJO
-const renderedFixture = suppose('basic_user').butMerge({
+const renderedFixture = suppose('authed_user').butMerge({
   name: 'Ben Sisko'
 }).render();
 
 // Render the fixture and then pass it to the `persist` function
 // passed into the fixture config.
-const promise = suppose('basic_user').butMerge({
+const promise = suppose('authed_user').butMerge({
   name: 'Ben Sisko'
 }).persist().then((result) => {
   // result is what was returned by the `persist` function
 });
+
+// Immutable.js is included as an optional dependency.  If installed, then you
+// can easily convert your fixture into a full immutable object tree.
+const promise = suppose('authed_user').asImmutable()
 
 
 
