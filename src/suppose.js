@@ -1,6 +1,14 @@
 const _ = require('lodash');
 const Joi = require('joi');
 
+let immutable;
+
+try {
+  immutable = require('immutable')
+} catch (e) {
+  // immutable not installed
+}
+
 let _fixtureDefsByName = {};
 
 function resetAll() {
@@ -48,6 +56,14 @@ function suppose(fixtureName) {
   let asPersisted;
 
   function SupposeChainable() {
+    this.asImmutable = (config) => {
+      if (immutable) {
+        return immutable.fromJS(this.render(config));
+      }
+
+      throw new SupposeError('The method asImmutable is only available if immutable.js is installed ');
+    };
+
     this.render = (config) => {
       let model = fixtureDef.generateFn(config);
       if (model instanceof SupposeChainable) {
@@ -102,9 +118,12 @@ function suppose(fixtureName) {
   return new SupposeChainable();
 }
 
+class SupposeError extends Error { }
+
 module.exports = Object.assign(suppose, {
   resetAll,
   defineFixture,
+  SupposeError
 });
 
 

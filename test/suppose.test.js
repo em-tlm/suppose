@@ -5,6 +5,13 @@ const chai = require('chai');
 const sinon = require('sinon');
 const { expect } = chai;
 
+let immutable;
+try {
+  immutable = require('immutable')
+} catch (e) {
+  // immutable not installed
+}
+
 afterEach(() => {
   suppose.resetAll();
 });
@@ -55,6 +62,23 @@ describe('defineFixture', function() {
     return promise.then((result) => {
       expect(result).to.eql('fakePersistResult');
     });
+  });
+
+  it('fixture can converted into immutableJS if installed', function() {
+    if (immutable) {
+      let model = suppose('emptyCart').asImmutable({hasFoo: true});
+      expect(immutable.isImmutable(model)).to.be.true;
+
+      expect(model.toJS()).to.eql({
+        items: [],
+        itemsCount: 0,
+        fooId: 'fakeId',
+      });
+    } else {
+      expect(() => {
+        suppose('emptyCart').asImmutable({hasFoo: true});
+      }).to.throw(suppose.SupposeError);
+    }
   });
 
   it('fixture can be removed', function() {
