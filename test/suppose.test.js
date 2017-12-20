@@ -133,6 +133,9 @@ describe('when fixture rendered has merges', function() {
         items: [],
         itemsCount: 0,
         fooId: config.hasFoo ? 'fakeId' : null,
+        metadata: {
+          foo: 'foo',
+        },
       };
     });
   });
@@ -144,8 +147,29 @@ describe('when fixture rendered has merges', function() {
       items: [],
       itemsCount: 0,
       fooId: null,
+      metadata: {
+        foo: 'foo'
+      },
       vip: 'trep'
     });
   });
+
+
+  it('it merges deeply', function() {
+   expect(
+     suppose('twoItemsInCart').butMerge({ metadata: { baz: 'baz' }}).render({hasFoo: false})
+   ).to.eql({
+     items: [],
+     itemsCount: 0,
+     fooId: null,
+     metadata: {
+       foo: 'foo',
+       baz: 'baz',
+     },
+    });
+  });
+
+
+
 });
 
