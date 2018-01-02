@@ -107,7 +107,7 @@ describe('when the fixture generated doesnt validate correctly', function() {
       return {
         items: [],
         itemsCount: 0,
-        fooId: config.hasFoo ? 'fakeId' : null,
+        fooId: (config || {}).hasFoo ? 'fakeId' : null,
       };
     }, {
       typeName: 'CheckoutCart',
@@ -169,7 +169,24 @@ describe('when fixture rendered has merges', function() {
     });
   });
 
-
+  it('if functions are passed, it merges the result of running the function', function() {
+   expect(
+     suppose('twoItemsInCart')
+       .butMerge({vap: 1})
+       .butMerge((data) => {
+         return {vap: data.vap + 1}
+       })
+       .render({})
+   ).to.eql({
+     items: [],
+     itemsCount: 0,
+     fooId: null,
+     metadata: {
+       foo: 'foo',
+     },
+     vap: 2,
+    });
+  });
 
 });
 

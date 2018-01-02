@@ -64,14 +64,19 @@ function suppose(fixtureName) {
       throw new SupposeError('The method asImmutable is only available if immutable.js is installed ');
     };
 
-    this.render = (config) => {
+    this.render = (config={}) => {
       let model = fixtureDef.generateFn(config);
-      if (model instanceof SupposeChainable) {
-        model = model.render();
-      }
+      const toMerge = [fixtureDef.generateFn(config), ...objMerges];
 
-      const args = [{}, model].concat(objMerges);
-      model = _.merge.apply(_, args)
+      model = _.reduce(toMerge, (acc, objMerge) => {
+        if (objMerge instanceof SupposeChainable) {
+          objMerge = objMerge.render();
+        } if (_.isFunction(objMerge)) {
+          objMerge = objMerge(acc);
+        }
+
+        return _.merge(acc, objMerge);
+      }, model);
 
       if (fixtureDef.schema) {
         const result = Joi.attempt(model, fixtureDef.schema);
@@ -99,10 +104,6 @@ function suppose(fixtureName) {
 
     this.butMerge = (_obj) => {
       let obj = _obj;
-
-      if (obj instanceof SupposeChainable) {
-        obj = obj.render();
-      }
 
       objMerges.push(obj)
 
