@@ -126,7 +126,7 @@ describe('when the fixture generated doesnt validate correctly', function() {
   });
 });
 
-describe('when fixture rendered has merges', function() {
+describe('.butMerge()', function() {
   beforeEach(function() {
     suppose.defineFixture('twoItemsInCart', (config) => {
       return {
@@ -187,6 +187,25 @@ describe('when fixture rendered has merges', function() {
      vap: 2,
     });
   });
+});
 
+describe('.butShallowMerge()', function() {
+  beforeEach(function() {
+    suppose.defineFixture('twoItemsInCart', (config) => {
+      return {
+        metadata: {
+          foo: 'foo',
+        },
+      };
+    });
+  });
+
+  it('it merges shallowly', function() {
+    expect(
+      suppose('twoItemsInCart').butShallowMerge({ metadata: {}}).render()
+    ).to.eql({
+      metadata: {},
+    });
+  });
 });
 

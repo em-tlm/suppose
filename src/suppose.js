@@ -68,14 +68,20 @@ function suppose(fixtureName) {
       let model = fixtureDef.generateFn(config);
       const toMerge = [fixtureDef.generateFn(config), ...objMerges];
 
-      model = _.reduce(toMerge, (acc, objMerge) => {
-        if (objMerge instanceof SupposeChainable) {
-          objMerge = objMerge.render();
-        } if (_.isFunction(objMerge)) {
-          objMerge = objMerge(acc);
+      model = _.reduce(toMerge, (_acc, _objMerge) => {
+        let { isDeep, data } = _objMerge;
+
+        if (data instanceof SupposeChainable) {
+          data = data.render();
+        } if (_.isFunction(data)) {
+          data = data(_acc);
         }
 
-        return _.merge(acc, objMerge);
+        if (isDeep) {
+          return _.merge(_acc, data);
+        } else {
+          return Object.assign(_acc, data);
+        }
       }, model);
 
       if (fixtureDef.schema) {
@@ -103,7 +109,15 @@ function suppose(fixtureName) {
     };
 
     this.butMerge = (_obj) => {
-      let obj = _obj;
+      let obj = { isDeep: true, data: _obj };
+
+      objMerges.push(obj)
+
+      return this;
+    };
+
+    this.butShallowMerge = (_obj) => {
+      let obj = { isDeep: false, data: _obj };
 
       objMerges.push(obj)
 
