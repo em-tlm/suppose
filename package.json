@@ -1,6 +1,6 @@
 {
   "name": "suppose",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,13 +9,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "joi": "^10.0.0",
-    "lodash": "^4.17.4"
+    "joi": "^17.4.2",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "chai": "^4.1.2",
-    "mocha": "^4.0.1",
-    "sinon": "^4.1.2"
+    "mocha": "^9.0.3",
+    "sinon": "^11.1.2"
   },
   "optionalDependencies": {
     "immutable": "^4.0.0-rc.9"
